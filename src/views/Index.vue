@@ -23,7 +23,7 @@
           <div class="slider-bg"></div>
           <div class="slider-volume" :style="{ width: volume + `%` }"></div>
           <input
-            @change="changeVolume($event.target.value)"
+            v-model="volume"
             type="range"
             min="0"
             max="100"
@@ -119,9 +119,11 @@ export default {
         }
       }
       return index;
-    },
+    }
+  },
 
-    changeVolume(value) {
+  watch: {
+    volume: function(value) {
       this.volume = value;
       const volume = value / 100;
       this.player.volume = volume;
