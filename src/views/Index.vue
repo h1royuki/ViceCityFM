@@ -108,6 +108,7 @@ export default {
       const duration = this.player.duration;
       const startTime = Math.floor(Math.random() * duration);
       this.player.currentTime = startTime;
+
       setTimeout(() => {
         this.changeBackground();
         this.noise.pause();
@@ -137,6 +138,18 @@ export default {
         }
       }
       return index;
+    },
+
+    changeVolumeByScrollEvent(delta) {
+      if (delta > 0) {
+        if (this.volume > 0) {
+          this.volume = this.volume - 5;
+        }
+      } else {
+        if (this.volume < 100) {
+          this.volume = this.volume + 5;
+        }
+      }
     }
   },
 
@@ -151,6 +164,11 @@ export default {
 
   mounted() {
     this.noise.play();
+
+    window.addEventListener("wheel", event =>
+      this.changeVolumeByScrollEvent(event.deltaY)
+    );
+
     this.player.addEventListener("loadedmetadata", () => this.startPlaying());
   },
 
