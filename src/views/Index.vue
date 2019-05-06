@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <div class="background"></div>
+    <div
+      class="background"
+      :style="{ clipPath: `polygon(${background})` }"
+    ></div>
     <audio
       class="player"
       ref="player"
@@ -77,6 +80,7 @@ export default {
   data() {
     return {
       logoSrc: "./images/logo.png",
+      background: `8% 10%, 90% 13%, 87% 90%, 12% 95%`,
       stations: null,
       activeStation: 4,
       volume: 100,
@@ -105,9 +109,23 @@ export default {
       const startTime = Math.floor(Math.random() * duration);
       this.player.currentTime = startTime;
       setTimeout(() => {
+        this.changeBackground();
         this.noise.pause();
         this.player.play();
       }, 1000);
+    },
+
+    changeBackground() {
+      // topLeft, topRight, bottomRight, bottomLeft
+      this.background = `
+      ${this.getRandomInt(5, 15)}% ${this.getRandomInt(5, 15)}%,
+      ${this.getRandomInt(85, 95)}% ${this.getRandomInt(5, 15)}%,
+      ${this.getRandomInt(85, 95)}% ${this.getRandomInt(85, 95)}%, 
+      ${this.getRandomInt(1, 15)}% ${this.getRandomInt(85, 95)}%`;
+    },
+
+    getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
     },
 
     getStation(way, index) {

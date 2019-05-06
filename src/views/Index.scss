@@ -32,13 +32,13 @@ body {
 
 .background {
   background-image: url("../../public/images/background.png");
-  clip-path: polygon(8% 10%, 90% 13%, 87% 90%, 12% 95%);
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   z-index: -1;
+  transition: 0.5s;
 }
 
 .logo {
