@@ -1,23 +1,9 @@
 <template>
   <div class="container">
-    <div
-      class="background"
-      :style="{ clipPath: `polygon(${background})` }"
-    ></div>
-    <audio
-      class="player"
-      ref="player"
-      loop="true"
-      :src="stations ? playerUrl : null"
-    />
-    <audio
-      class="player"
-      ref="noise"
-      loop="true"
-      autoplay="true"
-      src="./files/noise.ogg"
-    />
-    <img class="logo" :src="logoSrc" />
+    <div class="background" :style="{ clipPath: `polygon(${background})` }"></div>
+    <audio class="player" ref="player" loop="true" :src="stations ? playerUrl : null"/>
+    <audio class="player" ref="noise" loop="true" autoplay="true" src="./files/noise.ogg"/>
+    <img class="logo" :src="logoSrc">
     <div class="radio-text">radio</div>
     <div class="radio-container">
       <div class="volume">
@@ -25,45 +11,26 @@
         <div class="slider">
           <div class="slider-bg"></div>
           <div class="slider-volume" :style="{ width: volume + `%` }"></div>
-          <input
-            v-model="volume"
-            type="range"
-            min="0"
-            max="100"
-            value="50"
-            class="slider-input"
-          />
+          <input v-model="volume" type="range" min="0" max="100" value="50" class="slider-input">
         </div>
       </div>
       <div class="radio" v-if="stations">
-        <div
-          class="prev-station"
-          @click="changeStation(getStation('prev', activeStation - 1))"
-        >
+        <div class="prev-station" @click="changeStation(getStation('prev', activeStation - 1))">
           <p class="button">◀</p>
         </div>
         <div class="stations">
           <div class="stations-background"></div>
           <div class="prev">
-            <img
-              class="img"
-              :src="stations[getStation('prev', activeStation - 1)].logo.url"
-            />
+            <img class="img" :src="stations[getStation('prev', activeStation - 1)].logo.url">
           </div>
           <div class="active" @click="togglePlaying">
-            <img class="img" :src="stations[activeStation].logo.url" />
+            <img class="img" :src="stations[activeStation].logo.url">
           </div>
           <div class="next">
-            <img
-              class="img"
-              :src="stations[getStation('next', activeStation + 1)].logo.url"
-            />
+            <img class="img" :src="stations[getStation('next', activeStation + 1)].logo.url">
           </div>
         </div>
-        <div
-          class="next-station"
-          @click="changeStation(getStation('next', activeStation + 1))"
-        >
+        <div class="next-station" @click="changeStation(getStation('next', activeStation + 1))">
           <p class="button">▶</p>
         </div>
       </div>
@@ -141,13 +108,23 @@ export default {
     },
 
     changeVolumeByScrollEvent(delta) {
+      // scroll down
       if (delta > 0) {
-        if (this.volume > 0) {
-          this.volume = this.volume - 5;
+        // is need change
+        if (this.volume !== 0) {
+          if (this.volume - 5 > 0) {
+            this.volume = this.volume - 5;
+          } else {
+            this.volume = 0;
+          }
         }
       } else {
-        if (this.volume < 100) {
-          this.volume = this.volume + 5;
+        if (this.volume !== 100) {
+          if (this.volume + 5 < 100) {
+            this.volume = this.volume + 5;
+          } else {
+            this.volume = 100;
+          }
         }
       }
     }
