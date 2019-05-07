@@ -2,7 +2,7 @@
   <div class="container">
     <div class="background" :style="{ clipPath: `polygon(${background})` }"></div>
     <audio class="player" ref="player" loop="true" :src="stations ? playerUrl : null"/>
-    <audio class="player" ref="noise" loop="true" autoplay="true" src="./files/noise.ogg"/>
+    <audio class="player" ref="noise" loop="true" src="./files/noise.ogg"/>
     <img class="logo" :src="logoSrc">
     <div class="radio-text">radio</div>
     <div class="radio-container">
@@ -15,22 +15,32 @@
         </div>
       </div>
       <div class="radio" v-if="stations">
-        <div class="prev-station" @click="changeStation(getStation('prev', activeStation - 1))">
+        <div class="prev-station" @click="prevStation()">
           <p class="button">◀</p>
         </div>
         <div class="stations">
           <div class="stations-background"></div>
-          <div class="prev">
-            <img class="img" :src="stations[getStation('prev', activeStation - 1)].logo.url">
-          </div>
-          <div class="active" @click="togglePlaying">
-            <img class="img" :src="stations[activeStation].logo.url">
-          </div>
-          <div class="next">
-            <img class="img" :src="stations[getStation('next', activeStation + 1)].logo.url">
-          </div>
+          <transition-group name="flip-list" tag="div" class="stations-animation">
+            <div v-for="(station, index) in stations" :key="station.name">
+              <div v-if="index === activeStation - 1" class="prev">
+                <img class="img" :src="station.logo.url">
+              </div>
+              <div v-else-if="index === activeStation" class="active" @click="togglePlaying">
+                <img class="img" :src="stations[activeStation].logo.url">
+              </div>
+              <div v-else-if="index === activeStation + 1" class="next">
+                <img class="img" :src="station.logo.url">
+              </div>
+              <div
+                v-else-if="index === activeStation + 2 || index === activeStation - 2"
+                class="hidden"
+              >
+                <img class="img" :src="station.logo.url">
+              </div>
+            </div>
+          </transition-group>
         </div>
-        <div class="next-station" @click="changeStation(getStation('next', activeStation + 1))">
+        <div class="next-station" @click="nextStation()">
           <p class="button">▶</p>
         </div>
       </div>
@@ -56,9 +66,16 @@ export default {
   },
 
   methods: {
-    changeStation(index) {
+    nextStation() {
+      const firstElement = this.stations.shift();
+      this.stations.push(firstElement);
       this.noise.play();
-      this.activeStation = index;
+    },
+
+    prevStation() {
+      const lastElement = this.stations.pop();
+      this.stations.unshift(lastElement);
+      this.noise.play();
     },
 
     togglePlaying() {
@@ -94,17 +111,6 @@ export default {
 
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
-    },
-
-    getStation(way, index) {
-      if (!this.stations[index]) {
-        if (way === "next") {
-          index = index - Object.keys(this.stations).length;
-        } else {
-          index = Object.keys(this.stations).length + index;
-        }
-      }
-      return index;
     },
 
     changeVolumeByScrollEvent(delta) {
