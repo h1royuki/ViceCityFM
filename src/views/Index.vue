@@ -26,6 +26,10 @@
                 <img class="img" :src="station.logo.url">
               </div>
               <div v-else-if="index === activeStation" class="active" @click="togglePlaying">
+                <div class="playing-overlay">
+                  <div v-if="paused" class="paused-icon">▶</div>
+                  <div v-else class="played-icon">▮▮</div>
+                </div>
                 <img class="img" :src="stations[activeStation].logo.url">
               </div>
               <div v-else-if="index === activeStation + 1" class="next">
@@ -70,22 +74,23 @@ export default {
       const firstElement = this.stations.shift();
       this.stations.push(firstElement);
       this.noise.play();
+      this.paused = false;
     },
 
     prevStation() {
       const lastElement = this.stations.pop();
       this.stations.unshift(lastElement);
       this.noise.play();
+      this.paused = false;
     },
 
     togglePlaying() {
-      this.paused = !this.paused;
-
       if (this.paused) {
         this.player.play();
       } else {
         this.player.pause();
       }
+      this.paused = !this.paused;
     },
 
     startPlaying() {
@@ -97,6 +102,7 @@ export default {
         this.changeBackground();
         this.noise.pause();
         this.player.play();
+        this.paused = false;
       }, 1000);
     },
 

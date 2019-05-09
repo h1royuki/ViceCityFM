@@ -1,6 +1,5 @@
 $font-color: #ffbaf9;
 
-
 // animation
 .flip-list-move {
   transition: 1s;
@@ -132,7 +131,7 @@ body {
 
 .prev-station,
 .next-station {
-  height: 156px;
+  height: 100%;
   width: 100px;
   background-color: #009cff;
   clip-path: polygon(36% 0%, 100% 0%, 64% 100%, 0% 100%);
@@ -194,7 +193,7 @@ body {
     align-items: center;
     width: 150px;
     height: 150px;
-    padding: 0 15px;
+    margin: 0 15px;
     transition: 1s;
     .img {
       max-width: 150px;
@@ -215,7 +214,37 @@ body {
   }
 
   .active {
+    position: relative;
     cursor: pointer;
+
+    .playing-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+
+      .paused-icon,
+      .played-icon {
+        font-size: 50px;
+        color: $font-color;
+        text-shadow: 0 0 1px 0 black;
+        text-shadow: 5px 5px 0 #222;
+      }
+
+      .played-icon {
+        opacity: 0;
+        transition: 0.4s;
+
+        &:hover {
+          opacity: 1;
+          transition: 0.4s;
+        }
+      }
+    }
+
     .img {
       z-index: 1;
     }
@@ -223,9 +252,26 @@ body {
 }
 
 @media (max-width: 1140px) {
+  .radio {
+    height: 100px;
+  }
+
   .stations {
     .next,
     .prev {
+      width: 0;
+      opacity: 0;
+    }
+
+    .active {
+      width: 100px;
+      height: 100px;
+      .img {
+        max-height: 100px;
+      }
+    }
+
+    .hidden {
       display: none;
     }
   }
